@@ -19,6 +19,13 @@
   <section class="toolbar" aria-label="Vyhledávání">
     <input id="search" type="search" placeholder="Hledat německy nebo česky…" aria-label="Hledat německé sloveso nebo český překlad">
     <label><input id="onlySpecial" type="checkbox"> Zobrazit jen slovesa se zvláštností</label>
+    <div class="alphabet-range" aria-label="Rozsah písmen abecedy">
+      <span class="range-label">Abeceda:</span>
+      <label for="letterStart"><span>Od</span> <output id="letterStartOutput" for="letterStart">A</output></label>
+      <input id="letterStart" type="range" min="0" max="25" value="0" step="1" aria-label="Počáteční písmeno">
+      <label for="letterEnd"><span>Do</span> <output id="letterEndOutput" for="letterEnd">Z</output></label>
+      <input id="letterEnd" type="range" min="0" max="25" value="25" step="1" aria-label="Konečné písmeno">
+    </div>
   </section>
   <p class="legend"><strong>Jak číst zápis:</strong> svislá čárka (např. <em>auf|räumen</em>) označuje odlučitelnou předponu. Tvary jsou uvedené pro <em>er/sie/es</em>. Zelené štítky upozorňují na něco, co se vyplatí zapamatovat.</p>
   <div class="table-wrap">
@@ -44,14 +51,31 @@ const search = document.getElementById('search');
 const onlySpecial = document.getElementById('onlySpecial');
 const empty = document.getElementById('empty');
 const count = document.getElementById('count');
+const letterStart = document.getElementById('letterStart');
+const letterEnd = document.getElementById('letterEnd');
+const letterStartOutput = document.getElementById('letterStartOutput');
+const letterEndOutput = document.getElementById('letterEndOutput');
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const specialWords = new Set(['hängen','schaffen','trocknen','passieren','auf|wachen','bummeln','joggen','klettern','reisen','rodeln','stimmen','fotografieren','danken']);
 function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function normalizedFirstLetter(word){
+ const letter=(word||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleUpperCase('cs').charAt(0);
+ return alphabet.includes(letter)?letter:null;
+}
 function render(){
  const q=search.value.trim().toLocaleLowerCase('cs');
  const only=onlySpecial.checked;
+ const firstIndex=Number(letterStart.value);
+ const lastIndex=Number(letterEnd.value);
+ const firstLetter=alphabet[firstIndex];
+ const lastLetter=alphabet[lastIndex];
+ letterStartOutput.textContent=firstLetter;
+ letterEndOutput.textContent=lastLetter;
  const filtered=VERBS.filter(v=>{
   const hay=(v.word+' '+v.translation+' '+v.note+' '+v.tags.join(' ')).toLocaleLowerCase('cs');
-  return (!q||hay.includes(q))&&(!only||v.tags.some(t=>!['pravidelné'].includes(t))||specialWords.has(v.word));
+  const initial=normalizedFirstLetter(v.sort);
+  const inRange=initial&&alphabet.indexOf(initial)>=firstIndex&&alphabet.indexOf(initial)<=lastIndex;
+  return (!q||hay.includes(q))&&(!only||v.tags.some(t=>!['pravidelné'].includes(t))||specialWords.has(v.word))&&inRange;
  });
  count.textContent=filtered.length===VERBS.length?VERBS.length:filtered.length+' / '+VERBS.length;
  rows.innerHTML=filtered.map(v=>{
@@ -71,6 +95,14 @@ function render(){
 }
 search.addEventListener('input',render);
 onlySpecial.addEventListener('change',render);
+letterStart.addEventListener('input',()=>{
+ if(Number(letterStart.value)>Number(letterEnd.value)) letterEnd.value=letterStart.value;
+ render();
+});
+letterEnd.addEventListener('input',()=>{
+ if(Number(letterEnd.value)<Number(letterStart.value)) letterStart.value=letterEnd.value;
+ render();
+});
 render();
 </script>
 </body>

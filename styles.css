@@ -15,6 +15,12 @@ input[type=search]{width:100%;padding:12px 14px;border:1px solid #cfd8e2;border-
 input[type=search]:focus{border-color:#4d8067;box-shadow:0 0 0 3px rgba(77,128,103,.15)}
 .toolbar label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem;white-space:nowrap}
 .toolbar input[type=checkbox]{accent-color:#315a43;width:16px;height:16px}
+.alphabet-range{grid-column:1/-1;display:grid;grid-template-columns:auto minmax(54px,auto) minmax(110px,1fr) minmax(54px,auto) minmax(110px,1fr);align-items:center;gap:9px;padding-top:12px;border-top:1px solid var(--line)}
+.range-label{color:var(--ink);font-weight:650}
+.alphabet-range label{font-size:.82rem}
+.alphabet-range label span{color:var(--muted)}
+.alphabet-range output{display:inline-block;min-width:1.2em;text-align:center;font-weight:700;color:var(--accent)}
+input[type=range]{width:100%;accent-color:#315a43;cursor:pointer}
 .legend{font-size:.87rem;color:var(--muted);margin:10px 2px 16px}
 .legend strong{color:var(--ink)}
 .table-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
@@ -47,5 +53,5 @@ footer a{color:#265741}
 .method{background:#fff;border:1px solid var(--line);padding:15px 17px;border-radius:12px;margin-top:16px}
 .method h2{font-size:1rem;margin:0 0 6px}
 .method p{font-size:.87rem;color:#536174;margin:5px 0}
-@media(max-width:760px){.toolbar{grid-template-columns:1fr}.toolbar label{white-space:normal}thead{display:none}table,tbody,tr,td{display:block;width:100%!important}tbody tr.entry-row{padding:12px 14px;border-bottom:1px solid var(--line)}tbody tr.entry-row td{padding:3px 0;border:0}td.de{font-size:1.08rem;padding-bottom:4px!important}td.cs{padding-bottom:7px!important}td.flags{padding-bottom:7px!important}.detail{min-width:0}.more{padding-top:2px!important}}
+@media(max-width:760px){.toolbar{grid-template-columns:1fr}.toolbar label{white-space:normal}.alphabet-range{grid-template-columns:auto 1fr}.alphabet-range .range-label{grid-column:1/-1}.alphabet-range input[type=range]{grid-column:1/-1}.alphabet-range label{display:flex;justify-content:space-between}thead{display:none}table,tbody,tr,td{display:block;width:100%!important}tbody tr.entry-row{padding:12px 14px;border-bottom:1px solid var(--line)}tbody tr.entry-row td{padding:3px 0;border:0}td.de{font-size:1.08rem;padding-bottom:4px!important}td.cs{padding-bottom:7px!important}td.flags{padding-bottom:7px!important}.detail{min-width:0}.more{padding-top:2px!important}}
 @media print{body{background:#fff}header{background:#fff;color:#111;padding:12px 0}.sub{color:#333}main{margin:10px auto}.toolbar{display:none}.table-wrap{box-shadow:none}.stat{box-shadow:none}.entry-row{break-inside:avoid}details .detail{display:block}details:not([open]) .detail{display:none}}
